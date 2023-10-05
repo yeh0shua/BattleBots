@@ -8,7 +8,7 @@ class Bot:
 
   def attack(self, target_bot):
     target_bot.charge -= 10
-    input(self.name + " attacked " target_bot.name)
+    input(self.name + " attacked " + target_bot.name)
     input(target_bot.name + " sustained 10 damage!")
     
 
@@ -24,7 +24,7 @@ class Champion:
 bot1 = Bot("Linus", 7)
 bot2 = Bot("Ghidra", 5)
 
-while bot1.charge > 0 or bot2.charge > 0:
+while bot1.charge > 0 and bot2.charge > 0:
   choice = input("Press A to attack!")
   if choice == 'A':
     bot1.attack(bot2)
@@ -35,7 +35,7 @@ while bot1.charge > 0 or bot2.charge > 0:
 
 if bot1.charge > 0:
   winner = bot1
-elif: bot2.charge > 0:
+elif bot2.charge > 0:
   winner = bot2
 
 print(winner.name + " won!")
