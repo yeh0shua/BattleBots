@@ -19,7 +19,38 @@ class Champion:
     self.name = name
     self.bots = []
     self.pack = {}
-  
+
+  # Enables player to choose a live bot from their team
+  def choose_fighter(self):
+    fighter = None
+    active_bots = []
+    for bot in self.bots:
+      if bot.active == True:
+        active_bots.append(bot)
+    if active_bots:
+      input("Choose your fighter!")
+      for idx, bot in enumerate(active_bots):
+        print("Enter " + str(idx) + " for " + bot.name + " with a charge of " + str(bot.charge))
+      while True:
+        try:
+          choice = int(input(""))
+          fighter = active_bots[choice]
+        except ValueError:
+          print("You have to choose a valid number! Try again.")
+          continue
+        except IndexError:
+          print("You have to choose a valid number! Try again.")
+        else:
+          break
+      input(self.name + " sent " + fighter.name + " to the battlefield!")
+      
+      
+      
+
+    else:
+      print("You have no active bots!") 
+    
+  '''
   def battle(self, opponent):
     input(opponent.name + " has challenged you to a battle!")
     input("Choose your first fighter:")
@@ -42,7 +73,7 @@ class Champion:
           input("Not a valid selection! Please try again.")
     
     # Opponent selects enemy bot
-    
+'''
 
     
 # Testing area
@@ -61,7 +92,7 @@ bot6 = Bot("Xenu", 6)
 player1.bots.extend([bot1, bot2, bot3])
 player2.bots.extend([bot4, bot5, bot6])
 
-player1.battle(player2)
+player1.choose_fighter()
 
 '''
 
