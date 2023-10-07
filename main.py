@@ -43,37 +43,52 @@ class Champion:
         else:
           break
       input(self.name + " sent " + fighter.name + " to the battlefield!")
-      
-      
-      
-
+      return fighter 
     else:
-      print("You have no active bots!") 
-    
-  '''
-  def battle(self, opponent):
-    input(opponent.name + " has challenged you to a battle!")
-    input("Choose your first fighter:")
-    fighter = None
-
-    # Player selects fighter
-    while fighter is None:
-      for bot in self.bots:
-        print(bot.name)
-      choice = input("Which bot will you send to battle first?\n")
-      for bot in self.bots:
-        if choice == bot.name:
-          fighter = bot
-          if fighter.active == True:
-            input(fighter.name + " has entered the ring!")
-            input(fighter.name + " has a charge of " + fighter.charge)
-          else:
-            input(fighter.name + " has no power! Make another selection")
+      print("You have no active bots!")
+      return None
+  
+  def choose_action(self, bot, enemy):
+    # Take user input
+    input("Your turn...")
+    print('''
+Enter 0 to Attack
+Enter 1 to Use Item
+Enter 2 to Forfeit Match
+          ''')
+    while True:
+      valid = [0, 1, 2]
+      try:
+        choice = int(input(""))
+      except TypeError:
+        print(self.name + "! That's not an option here.")
+        continue
+      else:
+        if choice in valid:
+          break
         else:
-          input("Not a valid selection! Please try again.")
+          print(self.name + "! That's not an option here.")
+          continue
     
-    # Opponent selects enemy bot
-'''
+    # Perform action based on input
+    if choice == 0:
+      bot.attack(enemy)
+    elif choice == 1:
+      pass
+    elif choice == 2:
+      pass
+
+   
+
+# Battle system
+
+def battle(player, computer):
+  print(computer.name + " has challenged you to a battle!")
+  player_bot = player.choose_fighter()
+  computer_bot = computer.bots[0]
+
+  while player_bot.charge > 0 and computer_bot.charge > 0:    
+    player.choose_action(player_bot, computer_bot)
 
     
 # Testing area
@@ -92,24 +107,5 @@ bot6 = Bot("Xenu", 6)
 player1.bots.extend([bot1, bot2, bot3])
 player2.bots.extend([bot4, bot5, bot6])
 
-player1.choose_fighter()
+battle(player1, player2)
 
-'''
-
-while bot1.charge > 0 and bot2.charge > 0:
-  choice = input("Press A to attack!")
-  if choice == 'A':
-    bot1.attack(bot2)
-    input("Your opponent is preparing an attack.")
-    bot2.attack(bot1)
-  else:
-    print(bot1.name + " did not understand your command.")
-
-if bot1.charge > 0:
-  winner = bot1
-elif bot2.charge > 0:
-  winner = bot2
-
-print(winner.name + " won!")
-
-'''
