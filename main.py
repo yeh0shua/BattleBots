@@ -84,6 +84,13 @@ Enter 3 to Forfeit Match
     elif choice == 3:
       return "QUIT"
 
+# Returns list of player's active bots
+def check_active_bots(player):
+  active_bots = []
+  for bot in player.bots:
+    if bot.active == True:
+      active_bots.append(bot)
+  return active_bots
 
 # Battle function
 
