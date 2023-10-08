@@ -92,6 +92,15 @@ def check_active_bots(player):
       active_bots.append(bot)
   return active_bots
 
+# Check for winner
+def check_winner(player1, player2):
+  if not check_active_bots(player1):
+    return player2
+  elif not check_active_bots(player2):
+    return player1
+  else:
+    return None 
+
 # Battle function
 
 def battle(player, computer):
