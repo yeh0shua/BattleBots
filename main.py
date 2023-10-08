@@ -13,7 +13,7 @@ class Bot:
     input(target_bot.name + " sustained 10 damage!")
     if target_bot.charge <= 10:
       input(target_bot.name + " powered off!")
-      target_bot.active == False
+      target_bot.active = False
     
 
 # Create player class
@@ -84,49 +84,25 @@ Enter 3 to Forfeit Match
     elif choice == 3:
       return "QUIT"
 
-   
 
-# Battle system
+# Battle function
 
 def battle(player, computer):
   winner = None
+  player_bot = None
+  computer_bot = None
 
   print(computer.name + " has challenged you to a battle!")
-  player_bot = player.choose_fighter()
-  computer_bot = computer.bots[0]
-  
-  # Battle continues until a winner is declared
+
   while winner == None:
-    players_active_bots = []
-    computers_active_bots = []
+    player_team = player.bots
+    computer_team = computer.bots
 
-  # Checks both teams for active bots and adds them to lists
-    for bot in player.bots:
-      if bot.active == True:
-        players_active_bots.append(bot)
-    for bot in computer.bots:
-      if bot.active == True:
-        computers_active_bots.append(bot)
-  
-    action = player.choose_action(player_bot, computer_bot)
-    if action == "QUIT":
-      winner = computer
+    player_bot = player.choose_fighter()
+    computer_bot = computer.bots[0]
 
-  # Checks both teams for inactive bots and removes them from lists
-    for bot in player.bots:
-      if bot.active == False:
-        players_active_bots.pop(bot)
-    for bot in computer.bots:
-      if bot.active == False:
-        computers_active_bots.pop(bot)
-
-    if not players_active_bots:
-      winner = computer
-  
-    if not computers_active_bots:
-      winner = player
-
-  print(winner.name + " has won the match!")    
+    while player_bot.active == True and computer_bot.active == True:
+      player.choose_action(player_bot, computer_bot)
 
     
 # Testing area
