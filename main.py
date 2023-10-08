@@ -11,6 +11,9 @@ class Bot:
     target_bot.charge -= 10
     input(self.name + " attacked " + target_bot.name)
     input(target_bot.name + " sustained 10 damage!")
+    if target_bot.charge <= 10:
+      input(target_bot.name + " powered off!")
+      target_bot.active == False
     
 
 # Create player class
@@ -53,11 +56,12 @@ class Champion:
     input("Your turn...")
     print('''
 Enter 0 to Attack
-Enter 1 to Use Item
-Enter 2 to Forfeit Match
+Enter 1 to Change BattleBot
+Enter 2 to Use Item
+Enter 3 to Forfeit Match
           ''')
     while True:
-      valid = [0, 1, 2]
+      valid = [0, 1, 2, 3]
       try:
         choice = int(input(""))
       except TypeError:
@@ -74,21 +78,55 @@ Enter 2 to Forfeit Match
     if choice == 0:
       bot.attack(enemy)
     elif choice == 1:
-      pass
+      self.choose_fighter()
     elif choice == 2:
       pass
+    elif choice == 3:
+      return "QUIT"
 
    
 
 # Battle system
 
 def battle(player, computer):
+  winner = None
+
   print(computer.name + " has challenged you to a battle!")
   player_bot = player.choose_fighter()
   computer_bot = computer.bots[0]
+  
+  # Battle continues until a winner is declared
+  while winner == None:
+    players_active_bots = []
+    computers_active_bots = []
 
-  while player_bot.charge > 0 and computer_bot.charge > 0:    
-    player.choose_action(player_bot, computer_bot)
+  # Checks both teams for active bots and adds them to lists
+    for bot in player.bots:
+      if bot.active == True:
+        players_active_bots.append(bot)
+    for bot in computer.bots:
+      if bot.active == True:
+        computers_active_bots.append(bot)
+  
+    action = player.choose_action(player_bot, computer_bot)
+    if action == "QUIT":
+      winner = computer
+
+  # Checks both teams for inactive bots and removes them from lists
+    for bot in player.bots:
+      if bot.active == False:
+        players_active_bots.pop(bot)
+    for bot in computer.bots:
+      if bot.active == False:
+        computers_active_bots.pop(bot)
+
+    if not players_active_bots:
+      winner = computer
+  
+    if not computers_active_bots:
+      winner = player
+
+  print(winner.name + " has won the match!")    
 
     
 # Testing area
