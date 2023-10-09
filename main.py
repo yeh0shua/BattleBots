@@ -1,17 +1,24 @@
 
 # Create robot class
 class Bot:
-  def __init__(self, name, level):
+  def __init__(self, name, level, attack, defense):
     self.name = name
     self.level = level
     self.charge = level * 10
-    self.active = True 
+    self.active = True
+
+    # Battle stats
+    self.attack1 = attack * level
+    self.defense = defense * level
 
   def attack(self, target_bot):
-    target_bot.charge -= 10
+    damage = self.attack1 - target_bot.defense
+    if damage < 0:
+      damage = 0
+    target_bot.charge -= damage
     input(self.name + " attacked " + target_bot.name)
-    input(target_bot.name + " sustained 10 damage!")
-    if target_bot.charge <= 10:
+    input(target_bot.name + " sustained " + str(damage) + " damage!")
+    if target_bot.charge <= 0:
       input(target_bot.name + " powered off!")
       target_bot.active = False
 
@@ -169,12 +176,12 @@ player1 = Champion("Joshua")
 player2 = Champion("Neon")
 
 
-bot1 = Bot("Linus", 7)
-bot2 = Bot("Ghidra", 5)
-bot3 = Bot("Victory", 6)
-bot4 = Bot("Picard", 5)
-bot5 = Bot("Haephestus", 7)
-bot6 = Bot("Xenu", 6)
+bot1 = Bot("Linus", 7, 1, 2)
+bot2 = Bot("Ghidra", 5, 4, 3)
+bot3 = Bot("Victory", 6, 2, 3)
+bot4 = Bot("Picard", 5, 3, 2)
+bot5 = Bot("Haephestus", 7, 4, 3)
+bot6 = Bot("Xenu", 6, 1, 1)
 
 player1.bots.extend([bot1, bot2, bot3])
 player2.bots.extend([bot4, bot5, bot6])
