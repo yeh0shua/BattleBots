@@ -8,11 +8,11 @@ class Bot:
     self.active = True
 
     # Battle stats
-    self.attack1 = attack * level
-    self.defense = defense * level
+    self.attack_stat = attack * level
+    self.defense_stat = defense * level
 
   def attack(self, target_bot):
-    damage = self.attack1 - target_bot.defense
+    damage = self.attack_stat - target_bot.defense_stat
     if damage < 0:
       damage = 0
     target_bot.charge -= damage
