@@ -137,7 +137,7 @@ def battle(player, computer):
 
     if player_bot == None:
       player_bot = player.choose_fighter()
-    if computer_bot == None
+    if computer_bot == None:
       computer_bot = computer.ai_bot_choice()
 
     while player_bot.active == True and computer_bot.active == True:
@@ -147,7 +147,7 @@ def battle(player, computer):
         break
       computer_bot.attack(player_bot)
     
-    break
+    
     winner = check_winner(player, computer)
 
     
