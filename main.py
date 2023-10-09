@@ -17,10 +17,9 @@ class Bot:
 
 # Create Item class
 class Item:
-  def __init__(sel):
-    self.name = None
-    self.revive = None
-    self.juice = None
+  def __init__(self, name, watts):
+    self.name = name
+    self.watts = watts
     
 # Create Champion class
 class Champion:
@@ -89,6 +88,21 @@ Enter 3 to Forfeit Match
       pass
     elif choice == 3:
       return "QUIT"
+  
+  # AI chooses first bot in index of active bots
+  def ai_bot_choice(self):
+    active_bots = []
+    for bot in self.bots:
+      if bot.active == True:
+        active_bots.append(bot)
+      if bot.active == False:
+        if bot in active_bots:
+          active_bots.pop(bot)
+    if active_bots:
+      input(self.name + " sent " + active_bots[0].name + " to the battlefield!")
+      return active_bots[0]
+    if not active_bots:
+      return None
 
 # Returns list of player's active bots
 def check_active_bots(player):
@@ -105,7 +119,7 @@ def check_winner(player1, player2):
   elif not check_active_bots(player2):
     return player1
   else:
-    return None 
+    return None
 
 # Battle function
 
@@ -117,14 +131,24 @@ def battle(player, computer):
   print(computer.name + " has challenged you to a battle!")
 
   while winner == None:
+
     player_team = player.bots
     computer_team = computer.bots
 
-    player_bot = player.choose_fighter()
-    computer_bot = computer.bots[0]
+    if player_bot == None:
+      player_bot = player.choose_fighter()
+    if computer_bot == None
+      computer_bot = computer.ai_bot_choice()
 
     while player_bot.active == True and computer_bot.active == True:
       player.choose_action(player_bot, computer_bot)
+      if computer_bot.active == False:
+        computer_bot = None
+        break
+      computer_bot.attack(player_bot)
+    
+    break
+    winner = check_winner(player, computer)
 
     
 # Testing area
