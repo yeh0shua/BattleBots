@@ -1,20 +1,20 @@
 
 # Create robot class
 class Bot:
-  def __init__(self, name, level, attack, defense):
+  def __init__(self, name, level, base_attack, base_defense):
     self.name = name
     self.level = level
     self.charge = level * 10
     self.active = True
 
     # Battle stats
-    self.attack_stat = attack * level
-    self.defense_stat = defense * level
+    self.attack_val = base_attack * level
+    self.defense_val = base_defense * level
 
   def attack(self, target_bot):
-    damage = self.attack_stat - target_bot.defense_stat
-    if damage < 0:
-      damage = 0
+    damage = self.attack_val - target_bot.defense_val
+    if damage <= 5:
+      damage = 5
     target_bot.charge -= damage
     input(self.name + " attacked " + target_bot.name)
     input(target_bot.name + " sustained " + str(damage) + " damage!")
