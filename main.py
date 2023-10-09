@@ -22,6 +22,10 @@ class Bot:
       input(target_bot.name + " powered off!")
       target_bot.active = False
 
+  def defend(self):
+    self.defense_val += 5
+    input(self.name + " defended itself!")
+
 # Create Item class
 class Item:
   def __init__(self, name, watts):
@@ -33,7 +37,10 @@ class Champion:
   def __init__(self, name):
     self.name = name
     self.bots = []
-    self.pack = {}
+    self.pack = []
+
+  def use_item(self, bot):
+    pass
 
   # Enables player to choose a live bot from their team
   def choose_fighter(self):
