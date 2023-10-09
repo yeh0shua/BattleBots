@@ -56,6 +56,10 @@ class Champion:
       print("You have no active bots!")
       return None
   
+  # Allows player to use item object from their pack.
+  def use_item(self, item):
+    pass
+
   def choose_action(self, bot, enemy):
     # Take user input
     input("Your turn...")
@@ -69,9 +73,10 @@ Enter 3 to Forfeit Match
       valid = [0, 1, 2, 3]
       try:
         choice = int(input(""))
+      except ValueError:
+        print(self.name + "! That's not an option here.")
       except TypeError:
         print(self.name + "! That's not an option here.")
-        continue
       else:
         if choice in valid:
           break
@@ -140,15 +145,22 @@ def battle(player, computer):
     if computer_bot == None:
       computer_bot = computer.ai_bot_choice()
 
+    # While either bot has an active status, players take turns attacking each other.
     while player_bot.active == True and computer_bot.active == True:
       player.choose_action(player_bot, computer_bot)
       if computer_bot.active == False:
-        computer_bot = None
         break
       computer_bot.attack(player_bot)
     
+    if player_bot.active == False:
+      player_bot = None
+    if computer_bot.active == False:
+      computer_bot = None
     
+
     winner = check_winner(player, computer)
+
+  input(winner.name + " has won the battle!")
 
     
 # Testing area
