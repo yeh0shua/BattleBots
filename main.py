@@ -14,9 +14,15 @@ class Bot:
     if target_bot.charge <= 10:
       input(target_bot.name + " powered off!")
       target_bot.active = False
-    
 
-# Create player class
+# Create Item class
+class Item:
+  def __init__(sel):
+    self.name = None
+    self.revive = None
+    self.juice = None
+    
+# Create Champion class
 class Champion:
   def __init__(self, name):
     self.name = name
