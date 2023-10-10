@@ -71,8 +71,27 @@ class Champion:
       return None
   
   # Allows player to use item object from their pack.
-  def use_item(self, item):
-    pass
+  def use_item(self, bot):
+    if self.pack:
+      for idx, item in enumerate(self.pack):
+        print(str(idx) + " for " + item.name)
+      while True:
+        try:
+          choice = int(input(""))
+          item = self.pack[choice]
+        except ValueError:
+          print("Invalid option! Try again.")
+          continue
+        except IndexError:
+          print("Invalid option! Try again")
+        else:
+          break
+      bot.charge += item.watts
+      self.pack.remove(item)
+      input(self.name + " used " + item.name + " on " + bot.name)
+      input(bot.name + "'s watt's increased by " + str(item.watts))
+    else:
+      input("No items in your pack.")
 
   def choose_action(self, bot, enemy):
     # Take user input
@@ -104,7 +123,7 @@ Enter 3 to Forfeit Match
     elif choice == 1:
       self.choose_fighter()
     elif choice == 2:
-      pass
+      self.use_item(bot)
     elif choice == 3:
       return "QUIT"
   
@@ -189,6 +208,9 @@ bot3 = Bot("Victory", 6, 2, 3)
 bot4 = Bot("Picard", 5, 3, 2)
 bot5 = Bot("Haephestus", 7, 4, 3)
 bot6 = Bot("Xenu", 6, 1, 1)
+
+repair_kit = Item("Repair Kit", 20)
+player1.pack.append(repair_kit)
 
 player1.bots.extend([bot1, bot2, bot3])
 player2.bots.extend([bot4, bot5, bot6])
