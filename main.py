@@ -195,6 +195,8 @@ def battle(player, computer):
 
   input(winner.name + " has won the battle!")
 
+def game():
+  input("Welcome to the world of BattleBots!")
     
 # Testing area
 
