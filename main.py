@@ -201,7 +201,7 @@ Enter 3 to Forfeit Match
         else:
           choice = active_bots[0]
       input(self.name + " sent " + choice.name + " to the battlefield!")
-      return active_bots[0]
+      return choice
     if not active_bots:
       return None
   
