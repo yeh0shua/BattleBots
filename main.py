@@ -4,7 +4,8 @@ class Bot:
   def __init__(self, name, level, base_attack, base_defense):
     self.name = name
     self.level = level
-    self.charge = level * 10
+    self.max_charge = level * 10
+    self.current_charge = level * 10
     self.active = True
 
     # Battle stats
@@ -15,10 +16,10 @@ class Bot:
     damage = self.attack_val - target_bot.defense_val
     if damage <= 5:
       damage = 5
-    target_bot.charge -= damage
+    target_bot.current_charge -= damage
     input(self.name + " attacked " + target_bot.name)
     input(target_bot.name + " sustained " + str(damage) + " damage!")
-    if target_bot.charge <= 0:
+    if target_bot.current_charge <= 0:
       input(target_bot.name + " powered off!")
       target_bot.active = False
 
@@ -40,9 +41,6 @@ class Champion:
     self.pack = []
     self.is_ai = is_ai
 
-  def use_item(self, bot):
-    pass
-
   # Enables player to choose a live bot from their team
   def choose_fighter(self):
     fighter = None
@@ -53,7 +51,7 @@ class Champion:
     if active_bots:
       input("Choose your fighter!")
       for idx, bot in enumerate(active_bots):
-        print("Enter " + str(idx) + " for " + bot.name + " with a charge of " + str(bot.charge))
+        print("Enter " + str(idx) + " for " + bot.name + " with a charge of " + str(bot.current_charge))
       while True:
         try:
           choice = int(input(""))
@@ -87,7 +85,7 @@ class Champion:
           print("Invalid option! Try again")
         else:
           break
-      bot.charge += item.watts
+      bot.current_charge += item.watts
       self.pack.remove(item)
       input(self.name + " used " + item.name + " on " + bot.name)
       input(bot.name + "'s watt's increased by " + str(item.watts))
@@ -142,6 +140,20 @@ Enter 3 to Forfeit Match
       return active_bots[0]
     if not active_bots:
       return None
+  
+  def ai_choose_battle_action(self, bot, target_bot):
+    if bot.current_charge <= bot.max_charge * .5:
+      if self.pack:
+        item_to_use = self.pack[0]
+        bot.current_charge += item_to_use.watts
+        self.pack.remove(item_to_use)
+        input(self.name + " used a " + item_to_use.name + " on " + bot.name)
+        input(bot.name + " has " + str(bot.current_charge) + " watts of charge!")
+      else:
+        bot.attack(target_bot)
+    else:
+      bot.attack(target_bot)
+
 
 # Returns list of player's active bots
 def check_active_bots(player):
@@ -184,7 +196,7 @@ def battle(player, computer):
       player.choose_action(player_bot, computer_bot)
       if computer_bot.active == False:
         break
-      computer_bot.attack(player_bot)
+      computer.ai_choose_battle_action(computer_bot, player_bot)
     
     if player_bot.active == False:
       player_bot = None
@@ -205,7 +217,7 @@ player1 = Champion("Joshua")
 player2 = Champion("Neon")
 
 
-bot1 = Bot("Linus", 7, 1, 2)
+bot1 = Bot("Linus", 7, 5, 6)
 bot2 = Bot("Ghidra", 5, 4, 3)
 bot3 = Bot("Victory", 6, 2, 3)
 bot4 = Bot("Picard", 5, 3, 2)
@@ -214,6 +226,7 @@ bot6 = Bot("Xenu", 6, 1, 1)
 
 repair_kit = Item("Repair Kit", 20)
 player1.pack.append(repair_kit)
+player2.pack.append(repair_kit)
 
 player1.bots.extend([bot1, bot2, bot3])
 player2.bots.extend([bot4, bot5, bot6])
