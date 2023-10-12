@@ -1,23 +1,41 @@
+import random
 
 # Create robot class
 class Bot:
-  def __init__(self, name, level, base_attack, base_defense):
+  def __init__(self, name, level, attack_module, defend_module, base_attack, base_defense):
     self.name = name
     self.level = level
     self.max_charge = level * 10
     self.current_charge = level * 10
     self.active = True
 
+    self.attack_module = attack_module
+    self.defend_module = defend_module
+
     # Battle stats
     self.attack_val = base_attack * level
     self.defense_val = base_defense * level
 
   def attack(self, target_bot):
-    damage = self.attack_val - target_bot.defense_val
+    critical = False
+    if random.randint(0,5) == 5:
+      critical = True
+
+    damage = (self.attack_val - target_bot.defense_val) + 10
+
+    if self.attack_module.has_advantage(target_bot.defend_module):
+      damage *= 1.5
+    if self.attack_module.is_disadvantaged(target_bot.defend_module):
+      damage *= .5
+
     if damage <= 5:
       damage = 5
+    if critical:
+      damage *= 2
     target_bot.current_charge -= damage
     input(self.name + " attacked " + target_bot.name)
+    if critical:
+      input("A critical hit!")
     input(target_bot.name + " sustained " + str(damage) + " damage!")
     if target_bot.current_charge <= 0:
       input(target_bot.name + " powered off!")
@@ -26,6 +44,42 @@ class Bot:
   def defend(self):
     self.defense_val += 5
     input(self.name + " defended itself!")
+  
+  def is_bot(self):
+    return True
+  
+  def watt_bar(self):
+    health = ""
+    watt_ratio = int((self.current_charge / self.max_charge) * 10)
+    for i in range(0, watt_ratio):
+      health += "*"
+    health_bar = "[" + health + "]"
+    return health_bar
+
+
+class Module:
+  def __init__(self, type):
+    self.type = type
+  
+  def has_advantage(self, other_module):
+    if self.type == "water" and other_module.type == "fire":
+      return True
+    if self.type == "fire" and other_module.type == "grass":
+      return True
+    if self.type == "grass" and other_module.type == "water":
+      return True
+    else:
+      return False
+  
+  def is_disadvantaged(self, other_module):
+    if self.type == "fire" and other_module.type == "water":
+      return True
+    if self.type == "grass" and other_module.type == "fire":
+      return True
+    if self.type == "water" and other_module.type == "grass":
+      return True
+    else:
+      return False  
 
 # Create Item class
 class Item:
@@ -120,7 +174,7 @@ Enter 3 to Forfeit Match
     if choice == 0:
       bot.attack(enemy)
     elif choice == 1:
-      self.choose_fighter()
+      return self.choose_fighter()
     elif choice == 2:
       self.use_item(bot)
     elif choice == 3:
@@ -193,10 +247,31 @@ def battle(player, computer):
 
     # While either bot has an active status, players take turns attacking each other.
     while player_bot.active == True and computer_bot.active == True:
-      player.choose_action(player_bot, computer_bot)
+      action = player.choose_action(player_bot, computer_bot)
+      try:
+        if action.is_bot:
+          player_bot = action
+      except AttributeError:
+        pass
       if computer_bot.active == False:
         break
       computer.ai_choose_battle_action(computer_bot, player_bot)
+
+# Battle status display
+      print('''
++++++++++++++++++++++++++++++++++++++++++++++++
+'''
++
+
+player.name + "                     " + computer.name + "\nBOT: " + player_bot.name + " " + player_bot.watt_bar() + "            " + "BOT: " + computer_bot.name + " " + computer_bot.watt_bar() + "\n" +
+
+player_bot.attack_module.type + "/" + player_bot.defend_module.type + "                 " + computer_bot.attack_module.type + "/" + computer_bot.defend_module.type +
+
+'''
++++++++++++++++++++++++++++++++++++++++++++++++
+''')
+
+# End battle status display
     
     if player_bot.active == False:
       player_bot = None
@@ -216,13 +291,17 @@ def game():
 player1 = Champion("Joshua")
 player2 = Champion("Neon")
 
+water_mod = Module("water")
+fire_mod = Module("fire")
+grass_mod = Module("grass")
 
-bot1 = Bot("Linus", 7, 5, 6)
-bot2 = Bot("Ghidra", 5, 4, 3)
-bot3 = Bot("Victory", 6, 2, 3)
-bot4 = Bot("Picard", 5, 3, 2)
-bot5 = Bot("Haephestus", 7, 4, 3)
-bot6 = Bot("Xenu", 6, 1, 1)
+
+bot1 = Bot("Linus", 10, fire_mod, fire_mod, 10, 10)
+bot2 = Bot("Ghidra", 10, grass_mod, grass_mod, 10, 10)
+bot3 = Bot("Victory", 10, water_mod, water_mod, 10, 10)
+bot4 = Bot("Picard", 10, water_mod, water_mod, 10, 10)
+bot5 = Bot("Haephestus", 10, grass_mod, grass_mod, 10, 10)
+bot6 = Bot("Xenu", 10, fire_mod, fire_mod, 10, 10)
 
 repair_kit = Item("Repair Kit", 20)
 player1.pack.append(repair_kit)
