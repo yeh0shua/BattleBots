@@ -198,10 +198,11 @@ Enter 3 to Forfeit Match
         if bot.defend_module.has_advantage(target_bot.attack_module) or bot.attack_module.has_advantage(target_bot.defend_module):
           smart_picks.append(bot)
           choice = smart_picks[0]
+          input(self.name + " sent " + choice.name + " to the battlefield!")
         else:
           choice = active_bots[0]
-      input(self.name + " sent " + choice.name + " to the battlefield!")
-      return choice
+          input(self.name + " sent " + choice.name + " to the battlefield!")
+        return choice
     if not active_bots:
       return None
   
@@ -222,9 +223,9 @@ Enter 3 to Forfeit Match
         if thought == good_idea:
           self.ai_bot_choice(target_bot)
         else:
-          return bot.attack(target_bot)
+          bot.attack(target_bot)
       else:
-        return bot.attack(target_bot)
+        bot.attack(target_bot)
 
 # Returns list of player's active bots
 def check_active_bots(player):
@@ -272,7 +273,12 @@ def battle(player, computer):
         pass
       if computer_bot.active == False:
         break
-      computer.ai_choose_battle_action(computer_bot, player_bot)
+      action = computer.ai_choose_battle_action(computer_bot, player_bot)
+      try:
+        if action.is_bot:
+          computer_bot = action
+      except AttributeError:
+        pass
 
 # Battle status display
       print('''
