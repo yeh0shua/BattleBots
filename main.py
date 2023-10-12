@@ -34,10 +34,11 @@ class Item:
     
 # Create Champion class
 class Champion:
-  def __init__(self, name):
+  def __init__(self, name, is_ai=False):
     self.name = name
     self.bots = []
     self.pack = []
+    self.is_ai = is_ai
 
   def use_item(self, bot):
     pass
