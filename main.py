@@ -52,7 +52,10 @@ class Bot:
     health = ""
     watt_ratio = int((self.current_charge / self.max_charge) * 10)
     for i in range(0, watt_ratio):
-      health += "*"
+      health += "#"
+    num_dashes = 10 - len(health)
+    for i in range(0, num_dashes):
+      health += "-"
     health_bar = "[" + health + "]"
     return health_bar
 
@@ -105,7 +108,7 @@ class Champion:
     if active_bots:
       input("Choose your fighter!")
       for idx, bot in enumerate(active_bots):
-        print("Enter " + str(idx) + " for " + bot.name + " with a charge of " + str(bot.current_charge))
+        print("Enter " + str(idx) + " for " + bot.name + " " + bot.watt_bar())
       while True:
         try:
           choice = int(input(""))
@@ -180,9 +183,10 @@ Enter 3 to Forfeit Match
     elif choice == 3:
       return "QUIT"
   
-  # AI chooses first bot in index of active bots
-  def ai_bot_choice(self):
+  # AI chooses a bot
+  def ai_bot_choice(self, target_bot):
     active_bots = []
+    smart_picks = []
     for bot in self.bots:
       if bot.active == True:
         active_bots.append(bot)
@@ -190,7 +194,13 @@ Enter 3 to Forfeit Match
         if bot in active_bots:
           active_bots.pop(bot)
     if active_bots:
-      input(self.name + " sent " + active_bots[0].name + " to the battlefield!")
+      for bot in active_bots:
+        if bot.defend_module.has_advantage(target_bot.attack_module) or bot.attack_module.has_advantage(target_bot.defend_module):
+          smart_picks.append(bot)
+          choice = smart_picks[0]
+        else:
+          choice = active_bots[0]
+      input(self.name + " sent " + choice.name + " to the battlefield!")
       return active_bots[0]
     if not active_bots:
       return None
@@ -206,8 +216,15 @@ Enter 3 to Forfeit Match
       else:
         bot.attack(target_bot)
     else:
-      bot.attack(target_bot)
-
+      if target_bot.attack_module.has_advantage(bot.defend_module):
+        thought = random.randint(1,3)
+        good_idea = 3
+        if thought == good_idea:
+          self.ai_bot_choice(target_bot)
+        else:
+          return bot.attack(target_bot)
+      else:
+        return bot.attack(target_bot)
 
 # Returns list of player's active bots
 def check_active_bots(player):
@@ -243,7 +260,7 @@ def battle(player, computer):
     if player_bot == None:
       player_bot = player.choose_fighter()
     if computer_bot == None:
-      computer_bot = computer.ai_bot_choice()
+      computer_bot = computer.ai_bot_choice(player_bot)
 
     # While either bot has an active status, players take turns attacking each other.
     while player_bot.active == True and computer_bot.active == True:
@@ -263,7 +280,7 @@ def battle(player, computer):
 '''
 +
 
-player.name + "                     " + computer.name + "\nBOT: " + player_bot.name + " " + player_bot.watt_bar() + "            " + "BOT: " + computer_bot.name + " " + computer_bot.watt_bar() + "\n" +
+player.name + "                     " + computer.name + "\nBOT: " + player_bot.name + " " + player_bot.watt_bar() + "      " + "BOT: " + computer_bot.name + " " + computer_bot.watt_bar() + "\n" +
 
 player_bot.attack_module.type + "/" + player_bot.defend_module.type + "                 " + computer_bot.attack_module.type + "/" + computer_bot.defend_module.type +
 
