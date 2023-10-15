@@ -97,6 +97,12 @@ class Champion:
     self.bots = []
     self.pack = []
     self.is_ai = is_ai
+  
+  def think(self):
+    pass
+  
+  def choose(self, list):
+    pass
 
   # Enables player to choose a live bot from their team
   def choose_fighter(self):
