@@ -312,7 +312,7 @@ def game():
 # Testing area
 
 player1 = Champion("Joshua")
-player2 = Champion("Neon")
+player2 = Champion("Gregory")
 
 water_mod = Module("water")
 fire_mod = Module("fire")
